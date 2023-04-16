@@ -5,13 +5,37 @@ using System;
 public partial class main : Control
 {
 	private Dictionary<string, int> counts;
+
+	private FileDialog openFile;
+	private AcceptDialog errorFile;
+	
+	private ProgressBar progressBar;
+	
+	private LineEdit input;
+
+	private Label inputLabel;
+	private Label countLabel;
+	private Label fileLabel;
+
+	private Button findButton;
+
 	public override void _Ready()
 	{
-	}
+		counts = new Dictionary<string, int>();
 
-	public override void _Process(double delta)
-	{
-	}
+		openFile = GetNode<FileDialog>("OpenFile");
+		errorFile = GetNode<AcceptDialog>("ErrorWindow");
+
+		progressBar = GetNode<ProgressBar>("LoadProgressBar");
+
+		input = GetNode<LineEdit>("LineEdit");
+		inputLabel = input.GetNode<Label>("Label");
+
+		countLabel = GetNode<Label>("CountLabel");
+        fileLabel = GetNode<Label>("FileLabel");
+
+        findButton = GetNode<Button>("Find");
+    }
 
 	public void _on_find_pressed()
 	{
@@ -20,6 +44,48 @@ public partial class main : Control
 
 	public void _on_load_button_pressed()
 	{
+		string text = input.Text;
+		if(String.IsNullOrEmpty(text))
+		{
+            showError("Input is empty");
+            return;
+		}
+		if(text.Split(" ").Length > 1)
+		{
 
+		}
+    }
+
+	public void _on_open_file_file_selected(string file)
+	{
+        input.Text = "";
+        counts.Clear();
+        try
+		{
+            progressBar.Value = 0;
+            //load this
+
+            findButton.Disabled = false;
+			input.Editable = true;
+
+        } 
+		catch (Exception ex)
+		{
+			showError(ex.Message);
+
+            counts.Clear();
+        }
+		finally
+		{
+			progressBar.Value = 0;
+			progressBar.Visible = false;
+
+		}
 	}
+
+	private void showError(string message)
+	{
+        errorFile.DialogText = message;
+        errorFile.Visible = true;
+    }
 }

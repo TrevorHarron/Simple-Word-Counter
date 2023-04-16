@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://cgghe5c8e6fcj"]
+[gd_scene load_steps=2 format=3 uid="uid://cgghe5c8e6fcj"]
+
+[ext_resource type="Script" path="res://main.cs" id="1_he7st"]
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_he7st")
 
 [node name="OpenFile" type="FileDialog" parent="."]
 initial_position = 2
@@ -25,7 +28,7 @@ text = "Load File
 "
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="."]
+[node name="FileLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 453.0
 offset_top = 546.0
@@ -62,6 +65,7 @@ offset_left = 450.0
 offset_top = 305.0
 offset_right = 656.0
 offset_bottom = 336.0
+editable = false
 
 [node name="Label" type="Label" parent="LineEdit"]
 offset_left = 53.0
@@ -83,6 +87,7 @@ offset_left = 102.0
 offset_top = 2.0
 offset_right = 102.0
 offset_bottom = 2.0
+disabled = true
 text = "Find"
 
 [node name="CountLabel" type="Label" parent="."]
@@ -93,3 +98,7 @@ offset_bottom = 373.0
 text = "999 instances of foo found!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[connection signal="file_selected" from="OpenFile" to="." method="_on_open_file_file_selected"]
+[connection signal="pressed" from="LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="Find" to="." method="_on_find_pressed"]
