@@ -19,6 +19,8 @@ public partial class main : Control
 
 	private Button findButton;
 
+	private RegEx nonLetters = new RegEx();
+
 	public override void _Ready()
 	{
 		counts = new Dictionary<string, int>();
@@ -35,6 +37,7 @@ public partial class main : Control
         fileLabel = GetNode<Label>("FileLabel");
 
         findButton = GetNode<Button>("Find");
+		nonLetters.Compile("(\\s+)|([\\p{P}\\p{S}])");
     }
 
 	public void _on_find_pressed()
@@ -50,9 +53,10 @@ public partial class main : Control
             showError("Input is empty");
             return;
 		}
-		if(text.Split(" ").Length > 1)
+		if(nonLetters.Search(text).GetEnd()>0)
 		{
-
+			showError("Input contains spaces, numbers, or punctuation");
+			return;
 		}
     }
 
