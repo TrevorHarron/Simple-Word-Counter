@@ -17,6 +17,7 @@ title = "Open a File"
 size = Vector2i(600, 300)
 ok_button_text = "Open"
 file_mode = 0
+filters = PackedStringArray("*.txt", "*.csv", "*.tsv")
 
 [node name="LoadButton" type="Button" parent="."]
 layout_mode = 0
@@ -68,13 +69,16 @@ offset_bottom = 336.0
 editable = false
 
 [node name="Label" type="Label" parent="LineEdit"]
-offset_left = 53.0
-offset_top = -33.0
-offset_right = 330.0
-offset_bottom = -7.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0970874
+anchor_top = -1.09677
+anchor_right = 1.44175
+anchor_bottom = -0.258065
 text = "Type the word you want to find"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Find" type="Button" parent="."]
 layout_mode = 1
@@ -95,7 +99,6 @@ offset_left = 493.0
 offset_top = 347.0
 offset_right = 770.0
 offset_bottom = 373.0
-text = "999 instances of foo found!"
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -44,7 +44,7 @@ public partial class main : Control
 
 	public void _on_find_pressed()
 	{
-		string text = input.Text;
+		string text = input.Text.ToLower();
 		if(String.IsNullOrEmpty(text))
 		{
             showError("Input is empty");
@@ -72,17 +72,39 @@ public partial class main : Control
         try
 		{
             progressBar.Value = 0;
-            //load this
-           
+			//load this
+			string delim = " ";//base assume textfile
+			string[] dirParts = fileDir.Split('.');
+
+            if (dirParts.Length > 1 )
+			{
+				string extension = dirParts[^1];
+				if (extension == "csv")
+				{
+					delim = ",";
+				} 
+				else if(extension == "tsv")
+				{
+					delim = "\t";
+				}
+				else if(extension != "txt")
+				{
+                    throw new Exception("Unsupported File type, txt, csv, and tsv accepted");
+                }
+			}
+			else
+			{
+				throw new Exception("Ambigious File type");
+			}
             using (StreamReader file = new StreamReader(fileDir))
             {
                 string ln;
                 while ((ln = file.ReadLine()) != null)
                 {
-                    string[] items = ln.Split(' ');
+                    string[] items = ln.Split(delim);//could be a comma seperated file, need to check
 					for(int i = 0; i < items.Length; i++)
 					{
-                        String str = Regex.Replace(items[i], @"[^A-Za-z0-9-]+", "");
+                        String str = Regex.Replace(items[i], @"[^A-Za-z0-9-]+", "").ToLower();
 						if(counts.ContainsKey(str))
 						{
 							counts[str] = counts[str]+1;
