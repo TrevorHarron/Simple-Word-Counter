@@ -1,6 +1,8 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
 public partial class main : Control
 {
@@ -37,15 +39,10 @@ public partial class main : Control
         fileLabel = GetNode<Label>("FileLabel");
 
         findButton = GetNode<Button>("Find");
-		nonLetters.Compile("(\\s+)|([\\p{P}\\p{S}])");
+		nonLetters.Compile("[^a-zA-Z0-9]+");
     }
 
 	public void _on_find_pressed()
-	{
-
-	}
-
-	public void _on_load_button_pressed()
 	{
 		string text = input.Text;
 		if(String.IsNullOrEmpty(text))
@@ -58,16 +55,47 @@ public partial class main : Control
 			showError("Input contains spaces, numbers, or punctuation");
 			return;
 		}
+		countLabel.Text = counts[text] + " instances of "+text+" found!";
+	}
+
+	public void _on_load_button_pressed()
+	{
+		openFile.Visible = true;
     }
 
-	public void _on_open_file_file_selected(string file)
+	public void _on_open_file_file_selected(string fileDir)
 	{
         input.Text = "";
         counts.Clear();
+        findButton.Disabled = true;
+        input.Editable = false;
         try
 		{
             progressBar.Value = 0;
             //load this
+           
+            using (StreamReader file = new StreamReader(fileDir))
+            {
+                string ln;
+                while ((ln = file.ReadLine()) != null)
+                {
+                    string[] items = ln.Split(' ');
+					for(int i = 0; i < items.Length; i++)
+					{
+                        String str = Regex.Replace(items[i], @"[^A-Za-z0-9-]+", "");
+						if(counts.ContainsKey(str))
+						{
+							counts[str] = counts[str]+1;
+						}
+						else
+						{
+							counts.Add(str, 1);
+						}
+                    }
+
+                }
+                file.Close();
+            }
 
             findButton.Disabled = false;
 			input.Editable = true;
