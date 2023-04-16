@@ -60,10 +60,10 @@ public partial class main : Control
 
 	public void _on_load_button_pressed()
 	{
-		openFile.Visible = true;
+		openFile.Show();
     }
 
-	public void _on_open_file_file_selected(string fileDir)
+	public void _on_open_file_file_selected(string _)
 	{
         input.Text = "";
         counts.Clear();
@@ -71,33 +71,42 @@ public partial class main : Control
         input.Editable = false;
         try
 		{
+			string fileDir = @openFile.CurrentPath;
+            if (String.IsNullOrEmpty(fileDir))
+            {
+                throw new Exception("No File Selected");
+            }
+
             progressBar.Value = 0;
 			//load this
-			string delim = " ";//base assume textfile
-			string[] dirParts = fileDir.Split('.');
-
-            if (dirParts.Length > 1 )
-			{
-				string extension = dirParts[^1];
-				if (extension == "csv")
-				{
-					delim = ",";
-				} 
-				else if(extension == "tsv")
-				{
-					delim = "\t";
-				}
-				else if(extension != "txt")
-				{
-                    throw new Exception("Unsupported File type, txt, csv, and tsv accepted");
-                }
-			}
-			else
-			{
-				throw new Exception("Ambigious File type");
-			}
+			
+			GD.Print(fileDir);
             using (StreamReader file = new StreamReader(fileDir))
             {
+                string delim = " ";//base assume textfile
+                string[] dirParts = fileDir.Split('.');
+
+                if (dirParts.Length > 1)
+                {
+                    string extension = dirParts[^1];
+                    if (extension == "csv")
+                    {
+                        delim = ",";
+                    }
+                    else if (extension == "tsv")
+                    {
+                        delim = "\t";
+                    }
+                    else if (extension != "txt")
+                    {
+                        throw new Exception("Unsupported File type, txt, csv, and tsv accepted");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Ambigious File type");
+                }
+
                 string ln;
                 while ((ln = file.ReadLine()) != null)
                 {
@@ -121,10 +130,13 @@ public partial class main : Control
 
             findButton.Disabled = false;
 			input.Editable = true;
+			fileLabel.Text = fileDir;
 
         } 
 		catch (Exception ex)
 		{
+			GD.PrintErr(ex.Message);
+			GD.PrintErr(ex.StackTrace);
 			showError(ex.Message);
 
             counts.Clear();
@@ -140,6 +152,6 @@ public partial class main : Control
 	private void showError(string message)
 	{
         errorFile.DialogText = message;
-        errorFile.Visible = true;
+		errorFile.Show();
     }
 }

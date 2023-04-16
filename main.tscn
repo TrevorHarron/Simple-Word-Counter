@@ -15,7 +15,10 @@ script = ExtResource("1_he7st")
 initial_position = 2
 title = "Open a File"
 size = Vector2i(600, 300)
+transient = false
+exclusive = false
 ok_button_text = "Open"
+dialog_text = "Pick a file to parse."
 file_mode = 0
 filters = PackedStringArray("*.txt", "*.csv", "*.tsv")
 
@@ -40,7 +43,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ErrorWindow" type="AcceptDialog" parent="."]
+initial_position = 1
 title = "Error"
+transient = false
+exclusive = false
+ok_button_text = "Close"
 
 [node name="LoadProgressBar" type="ProgressBar" parent="."]
 visible = false
