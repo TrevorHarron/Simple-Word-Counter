@@ -21,8 +21,6 @@ public partial class main : Control
 
 	private Button findButton;
 
-	private RegEx nonLetters = new RegEx();
-
 	public override void _Ready()
 	{
 		counts = new Dictionary<string, int>();
@@ -39,7 +37,6 @@ public partial class main : Control
         fileLabel = GetNode<Label>("FileLabel");
 
         findButton = GetNode<Button>("Find");
-		nonLetters.Compile("[^a-zA-Z0-9]+");
     }
 
 	public void _on_find_pressed()
@@ -50,12 +47,26 @@ public partial class main : Control
             showError("Input is empty");
             return;
 		}
-		if(nonLetters.Search(text).GetEnd()>0)
+		if (Regex.IsMatch(text, @"[^A-Za-z0-9-]+"))
 		{
-			showError("Input contains spaces, numbers, or punctuation");
+			showError("Input contains spaces or punctuation");
 			return;
 		}
-		countLabel.Text = counts[text] + " instances of "+text+" found!";
+		int count = 0;
+		if(!counts.TryGetValue(text,out count) || count ==0)
+		{
+            countLabel.Text = text + " was not found!";
+            return;
+		}
+        if(count == 1)
+		{
+            countLabel.Text = count + " instance of " + text + " was found!";
+        }
+		else
+		{
+            countLabel.Text = count + " instances of " + text + " was found!";
+        }
+        
 	}
 
 	public void _on_load_button_pressed()

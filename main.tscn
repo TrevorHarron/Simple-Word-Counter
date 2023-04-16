@@ -20,6 +20,7 @@ exclusive = false
 ok_button_text = "Open"
 dialog_text = "Pick a file to parse."
 file_mode = 0
+access = 2
 filters = PackedStringArray("*.txt", "*.csv", "*.tsv")
 
 [node name="LoadButton" type="Button" parent="."]
@@ -102,6 +103,7 @@ disabled = true
 text = "Find"
 
 [node name="CountLabel" type="Label" parent="."]
+layout_mode = 0
 offset_left = 493.0
 offset_top = 347.0
 offset_right = 770.0
